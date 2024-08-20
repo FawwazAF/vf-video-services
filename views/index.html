@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Metadata and GIF Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        .button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .metadata, .gif-container {
+            margin-top: 20px;
+        }
+        .metadata-item {
+            margin-bottom: 10px;
+        }
+        .metadata-item span {
+            font-weight: bold;
+        }
+        .gif-container img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin-top: 20px;
+        }
+        .error {
+            color: red;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Video Metadata and GIF Generator</h1>
+    <div class="container">
+        <form id="videoForm">
+            <div class="input-group">
+                <label for="videoUrl">Enter Video URL:</label>
+                <input type="text" id="videoUrl" name="videoUrl" required>
+            </div>
+            <button type="submit" class="button">Generate Metadata</button>
+            <button type="button" id="generateGif" class="button">Generate GIF</button>
+        </form>
+
+        <div id="metadata" class="metadata"></div>
+        <div id="gifContainer" class="gif-container"></div>
+        <div id="error" class="error"></div>
+    </div>
+
+    <script>
+        const form = document.getElementById('videoForm');
+        const metadataDiv = document.getElementById('metadata');
+        const gifContainer = document.getElementById('gifContainer');
+        const errorDiv = document.getElementById('error');
+        const generateGifButton = document.getElementById('generateGif');
+
+        form.addEventListener('submit', async function(event) {
+            event.preventDefault();
+            metadataDiv.innerHTML = '';
+            gifContainer.innerHTML = '';
+            errorDiv.innerHTML = '';
+
+            const videoUrl = document.getElementById('videoUrl').value;
+
+            try {
+                // Handle metadata generation
+                const response = await fetch('/video/metadata', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ videoUrl })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to generate metadata');
+                }
+
+                const metadata = await response.json();
+
+                metadataDiv.innerHTML = `
+                    <div class="metadata-item"><span>Duration:</span> ${metadata.duration} seconds</div>
+                    <div class="metadata-item"><span>Resolution:</span> ${metadata.resolution}</div>
+                    <div class="metadata-item"><span>Codec:</span> ${metadata.codec}</div>
+                    <div class="metadata-item"><span>Bitrate:</span> ${metadata.bitrate} bits per second</div>
+                    <div class="metadata-item"><span>Frame Rate:</span> ${metadata.frameRate} frames per second</div>
+                `;
+            } catch (error) {
+                errorDiv.textContent = error.message;
+            }
+        });
+
+        generateGifButton.addEventListener('click', async function() {
+            gifContainer.innerHTML = '';
+            errorDiv.innerHTML = '';
+
+            const videoUrl = document.getElementById('videoUrl').value;
+
+            try {
+                const response = await fetch('/video/generate-thumbnails', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ videoUrl })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to generate GIF');
+                }
+
+                const gifUrl = await response.json();
+                
+                gifContainer.innerHTML = `<img src="${gifUrl}" alt="Generated GIF">`;
+            } catch (error) {
+                errorDiv.textContent = error.message;
+            }
+        });
+    </script>
+</body>
+</html>

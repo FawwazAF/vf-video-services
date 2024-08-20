@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Thumbnails</title>
+</head>
+<body>
+    <h1>Generated Thumbnail</h1>
+    <div>
+        <% if (video && video.thumbnail) { %>
+            <h2>Thumbnail for Video:</h2>
+            <img src="<%= video.thumbnail %>" alt="Thumbnail">
+        <% } else { %>
+            <p>No thumbnail available.</p>
+        <% } %>
+    </div>
+</body>
+</html>

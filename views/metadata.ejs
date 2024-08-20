@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Metadata</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .metadata {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .metadata-item {
+            margin-bottom: 15px;
+        }
+        .metadata-item span {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Video Metadata</h1>
+    <div class="metadata">
+        <div class="metadata-item">
+            <span>Duration:</span> <%= duration %> seconds
+        </div>
+        <div class="metadata-item">
+            <span>Resolution:</span> <%= resolution %>
+        </div>
+        <div class="metadata-item">
+            <span>Codec:</span> <%= codec %>
+        </div>
+        <div class="metadata-item">
+            <span>Bitrate:</span> <%= bitrate %> bits per second
+        </div>
+        <div class="metadata-item">
+            <span>Frame Rate:</span> <%= frameRate %> frames per second
+        </div>
+    </div>
+</body>
+</html>
